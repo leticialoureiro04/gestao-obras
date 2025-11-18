@@ -1,0 +1,196 @@
+@model IEnumerable<GestaoObras.Models.Material>
+@{
+    ViewData["Title"] = "Materiais";
+    var hasItems = Model != null && Model.Any();
+}
+
+@*
+    View: Lista de Materiais
+    Objetivo: Apresentar todos os materiais com ações rápidas (Detalhes/Editar/Eliminar)
+    Notas:
+    - Mantém coerência gráfica com restantes listas do sistema (Clientes, Obras, etc.).
+    - Mostra alerta quando há stock baixo (< 50).
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-boxes mr-2"></i>Materiais
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active">Materiais</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-primary card-outline">
+
+                    <div class="card-header">
+                        <h3 class="card-title">Lista de Materiais</h3>
+                        <div class="card-tools">
+                            <a asp-action="Create" class="btn btn-sm btn-primary">
+                                <i class="fas fa-plus mr-1"></i> Novo Material
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+
+                        @if (!hasItems)
+                        {
+                            <!-- Sem materiais registados -->
+                            <div class="p-4">
+                                <div class="alert alert-info mb-0">
+                                    <h5><i class="icon fas fa-info-circle"></i> Informação</h5>
+                                    Ainda não existem materiais registados.
+                                    <a asp-action="Create" class="alert-link">Criar o primeiro material</a>.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Tabela -->
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Descrição</th>
+                                            <th class="text-center" style="width:160px;">Stock Disponível</th>
+                                            <th class="text-right" style="width:180px;">Ações</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var m in Model)
+                                        {
+                                            var stockClass = m.Stock_Disponivel < 50
+                                                ? "text-danger font-weight-bold"
+                                                : "text-success";
+
+                                            <tr>
+                                                <td>
+                                                    <i class="fas fa-box mr-1"></i>
+                                                    <strong>@m.Nome</strong>
+                                                </td>
+
+                                                <td>
+                                                    <small class="text-muted">
+                                                        @(m.Descricao?.Length > 80
+                                                            ? m.Descricao.Substring(0, 80) + "..."
+                                                            : m.Descricao)
+                                                    </small>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <span class="@stockClass">
+                                                        @m.Stock_Disponivel
+                                                    </span>
+
+                                                    @if (m.Stock_Disponivel < 50)
+                                                    {
+                                                        <i class="fas fa-exclamation-triangle text-warning ml-1"
+                                                           title="Stock baixo"></i>
+                                                    }
+                                                </td>
+
+                                                <td class="text-right">
+                                                    <div class="btn-group">
+
+                                                        <a asp-action="Details"
+                                                           asp-route-id="@m.Id_Material"
+                                                           class="btn btn-info btn-sm"
+                                                           data-toggle="tooltip"
+                                                           title="Ver detalhes">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+
+                                                        <a asp-action="Edit"
+                                                           asp-route-id="@m.Id_Material"
+                                                           class="btn btn-warning btn-sm"
+                                                           data-toggle="tooltip"
+                                                           title="Editar">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+
+                                                        <a asp-action="Delete"
+                                                           asp-route-id="@m.Id_Material"
+                                                           class="btn btn-danger btn-sm"
+                                                           data-toggle="tooltip"
+                                                           title="Apagar">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        }
+
+                    </div>
+
+                    <!-- Rodapé com contagem -->
+                    @if (hasItems)
+                    {
+                        var stockBaixo = Model.Count(m => m.Stock_Disponivel < 50);
+
+                        <div class="card-footer clearfix">
+                            <div class="float-left">
+                                <small class="text-muted">
+
+                                    Total: <strong>@Model.Count()</strong> material(is)
+
+                                    @if (stockBaixo > 0)
+                                    {
+                                        <span class="text-danger ml-2">
+                                            | <i class="fas fa-exclamation-triangle"></i>
+                                            <strong>@stockBaixo</strong> com stock baixo
+                                        </span>
+                                    }
+
+                                </small>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Inicializar tooltips Bootstrap
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}
+
+
+

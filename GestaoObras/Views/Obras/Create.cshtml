@@ -1,0 +1,118 @@
+@model GestaoObras.Models.Obra
+@{
+    ViewData["Title"] = "Criar Obra";
+}
+
+@*
+    View: Criar Obra
+    Objetivo: Formulário para registar uma nova obra.
+    Observações:
+    - Usa partial _ObraForm para partilhar estrutura com Edit.
+    - Mantém animações e UX consistentes com o resto do painel.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-plus mr-2"></i>Criar Obra
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Obras</a>
+                    </li>
+                    <li class="breadcrumb-item active">Criar</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-primary">
+
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-plus mr-2"></i>Nova Obra
+                        </h3>
+                        <div class="card-tools">
+                            <a asp-action="Index" class="btn btn-tool" title="Ver lista">
+                                <i class="fas fa-list"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="card-body">
+
+                            <!-- Sumário de validações -->
+                            <div asp-validation-summary="ModelOnly"
+                                 class="alert alert-danger"
+                                 role="alert"></div>
+
+                            <!-- Partial com o formulário principal -->
+                            <partial name="_ObraForm" model="Model" />
+
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save mr-2"></i>Guardar
+                            </button>
+
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-times mr-2"></i>Cancelar
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+
+            // Feedback visual no botão ao submeter
+            $('form').on('submit', function () {
+                var submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.prop('disabled', true);
+                submitBtn.html('<i class="fas fa-spinner fa-spin mr-2"></i>A guardar...');
+            });
+
+            // Focar automaticamente o primeiro input com autofocus (se existir)
+            $('input[autofocus]').focus();
+        });
+    </script>
+}
+

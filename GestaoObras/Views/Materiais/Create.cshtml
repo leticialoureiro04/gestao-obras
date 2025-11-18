@@ -1,0 +1,119 @@
+@model GestaoObras.Models.Material
+@{
+    ViewData["Title"] = "Criar Material";
+}
+
+@*
+    View: Criar Material
+    Finalidade: Formulário de criação de materiais com suporte a validação.
+    Notas:
+    - Usa partial _MaterialForm para evitar duplicação com Edit.
+    - AdminLTE layout + feedback visual após submissão.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-box-open mr-2"></i>Criar Material
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Materiais</a>
+                    </li>
+                    <li class="breadcrumb-item active">Criar</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-primary">
+
+                    <!-- Header do card -->
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-box-open mr-2"></i>Novo Material
+                        </h3>
+
+                        <div class="card-tools">
+                            <!-- Atalho para lista de materiais -->
+                            <a asp-action="Index" class="btn btn-tool" title="Ver lista">
+                                <i class="fas fa-list"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="card-body">
+
+                            <!-- Resumo de validação -->
+                            <div asp-validation-summary="ModelOnly"
+                                 class="alert alert-danger"
+                                 role="alert">
+                            </div>
+
+                            <!-- Partial com os campos do Material -->
+                            @* Reutilizável em Create e Edit *@
+                            <partial name="_MaterialForm" model="Model" />
+                        </div>
+
+                        <!-- Footer do card -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save mr-2"></i>Guardar
+                            </button>
+
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-times mr-2"></i>Cancelar
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+
+            // Feedback visual ao submeter
+            $('form').on('submit', function () {
+                var btn = $(this).find('button[type="submit"]');
+                btn.prop('disabled', true);
+                btn.html('<i class="fas fa-spinner fa-spin mr-2"></i>A guardar...');
+            });
+
+            // Focar automaticamente no primeiro campo com "autofocus"
+            $('input[autofocus]').focus();
+        });
+    </script>
+}
+
+

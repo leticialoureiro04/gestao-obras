@@ -1,0 +1,198 @@
+@model GestaoObras.Models.Cliente
+@{
+    ViewData["Title"] = "Detalhes do Cliente";
+}
+
+@*
+    View: Detalhes do Cliente
+    Finalidade: Mostrar informação organizada em tabs (dados gerais e contactos).
+    Observação: Inclui persistência do tab ativo via hash na URL.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-id-badge mr-2"></i>Detalhes do Cliente: @Model.Nome
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Clientes">Clientes</a>
+                    </li>
+                    <li class="breadcrumb-item active">Detalhes</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <!-- Card com Tabs -->
+                <div class="card card-primary card-outline card-outline-tabs">
+
+                    <!-- Tabs -->
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs" id="clienteTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="dados-tab" data-toggle="pill"
+                                   href="#dados" role="tab">
+                                    <i class="fas fa-info-circle mr-1"></i> Dados Gerais
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="contactos-tab" data-toggle="pill"
+                                   href="#contactos" role="tab">
+                                    <i class="fas fa-address-book mr-1"></i> Contactos
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Conteúdo das Tabs -->
+                    <div class="card-body">
+                        <div class="tab-content" id="clienteTabContent">
+
+                            <!-- TAB 1 - Dados Gerais -->
+                            <div class="tab-pane fade show active" id="dados" role="tabpanel">
+
+                                <div class="row">
+                                    <div class="col-md-8">
+
+                                        <h5 class="border-bottom pb-2 mb-3">
+                                            <i class="fas fa-user text-primary mr-2"></i>Informações do Cliente
+                                        </h5>
+
+                                        <dl class="row">
+                                            <dt class="col-sm-3">Nome</dt>
+                                            <dd class="col-sm-9"><strong>@Model.Nome</strong></dd>
+
+                                            <dt class="col-sm-3">NIF</dt>
+                                            <dd class="col-sm-9">@Model.NIF</dd>
+
+                                            <dt class="col-sm-3">Morada</dt>
+                                            <dd class="col-sm-9">
+                                                <i class="fas fa-map-marker-alt mr-1"></i>@Model.Morada
+                                            </dd>
+                                        </dl>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB 2 - Contactos -->
+                            <div class="tab-pane fade" id="contactos" role="tabpanel">
+
+                                <div class="row">
+                                    <div class="col-md-8">
+
+                                        <h5 class="border-bottom pb-2 mb-3">
+                                            <i class="fas fa-phone-alt text-success mr-2"></i>Contactos
+                                        </h5>
+
+                                        <dl class="row">
+
+                                            <!-- Email -->
+                                            <dt class="col-sm-3">Email</dt>
+                                            <dd class="col-sm-9">
+                                                @if (!string.IsNullOrWhiteSpace(Model.Email))
+                                                {
+                                                    <a href="mailto:@Model.Email">
+                                                        <i class="fas fa-envelope mr-1"></i>@Model.Email
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Não definido</span>
+                                                }
+                                            </dd>
+
+                                            <!-- Telefone -->
+                                            <dt class="col-sm-3">Telefone</dt>
+                                            <dd class="col-sm-9">
+                                                @if (!string.IsNullOrWhiteSpace(Model.Telefone))
+                                                {
+                                                    <a href="tel:@Model.Telefone">
+                                                        <i class="fas fa-phone mr-1"></i>@Model.Telefone
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Não definido</span>
+                                                }
+                                            </dd>
+
+                                        </dl>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="card-footer">
+                        <a asp-action="Edit" asp-route-id="@Model.Id_Cliente" class="btn btn-warning">
+                            <i class="fas fa-edit mr-1"></i> Editar
+                        </a>
+
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-1"></i> Voltar
+                        </a>
+
+                        <a asp-action="Delete" asp-route-id="@Model.Id_Cliente"
+                           class="btn btn-danger float-right">
+                            <i class="fas fa-trash-alt mr-1"></i> Apagar
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts
+{
+    <script>
+        $(function () {
+
+            // Comportamento dos tabs (Bootstrap 4)
+            $('#clienteTabs a[data-toggle="pill"]').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            // Guardar aba ativa no hash
+            $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+                window.location.hash = e.target.getAttribute('href');
+            });
+
+            // Restaurar aba ativa a partir do hash
+            var hash = window.location.hash;
+            if (hash) {
+                $('#clienteTabs a[href="' + hash + '"]').tab('show');
+            }
+
+        });
+    </script>
+}
+
+

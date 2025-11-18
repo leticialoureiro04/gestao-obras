@@ -1,0 +1,205 @@
+@model GestaoObras.Models.Material
+@{
+    ViewData["Title"] = "Editar Material";
+}
+
+@*
+    View: Editar Material
+    Objetivo: Permitir alterar dados do material e ver alertas dinâmicos de stock.
+    Notas:
+    - Mantém consistência visual com restantes páginas (AdminLTE).
+    - Inclui validação visual e alerta automático para stock baixo.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-edit mr-2"></i>Editar Material
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Materiais</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@Model.Id_Material">@Model.Nome</a></li>
+                    <li class="breadcrumb-item active">Editar</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-warning">
+
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-edit mr-2"></i>Editar Material: <strong>@Model.Nome</strong>
+                        </h3>
+                        <div class="card-tools">
+                            <a asp-action="Details" asp-route-id="@Model.Id_Material" class="btn btn-tool" title="Ver detalhes">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id_Material" />
+
+                        <div class="card-body">
+
+                            <!-- Resumo de validações -->
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                            <div class="row">
+
+                                <!-- Coluna Esquerda -->
+                                <div class="col-md-6">
+
+                                    <!-- Nome -->
+                                    <div class="form-group">
+                                        <label asp-for="Nome">
+                                            <i class="fas fa-box mr-1"></i>Nome do Material
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-box"></i></span>
+                                            </div>
+                                            <input asp-for="Nome" class="form-control" placeholder="Ex: Cimento Portland" />
+                                        </div>
+                                        <span asp-validation-for="Nome" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Descrição -->
+                                    <div class="form-group">
+                                        <label asp-for="Descricao">
+                                            <i class="fas fa-align-left mr-1"></i>Descrição
+                                        </label>
+                                        <textarea asp-for="Descricao" class="form-control" rows="4" placeholder="Descreva o material..."></textarea>
+                                        <span asp-validation-for="Descricao" class="text-danger small"></span>
+                                    </div>
+
+                                </div>
+
+                                <!-- Coluna Direita -->
+                                <div class="col-md-6">
+
+                                    <!-- Stock -->
+                                    <div class="form-group">
+                                        <label asp-for="Stock_Disponivel">
+                                            <i class="fas fa-layer-group mr-1"></i>Stock Disponível
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
+                                            </div>
+                                            <input asp-for="Stock_Disponivel" class="form-control" type="number" min="0" step="1" id="stockInput" />
+                                        </div>
+                                        <span asp-validation-for="Stock_Disponivel" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Alertas de Stock -->
+                                    <div class="alert alert-warning" id="stockAlert" style="display:none;">
+                                        <h5><i class="icon fas fa-exclamation-triangle"></i> Stock Baixo</h5>
+                                        <p class="mb-0">Stock inferior a 50 unidades.</p>
+                                    </div>
+
+                                    <div class="alert alert-success" id="stockOk" style="display:none;">
+                                        <h5><i class="icon fas fa-check-circle"></i> Stock Adequado</h5>
+                                        <p class="mb-0">Stock suficiente.</p>
+                                    </div>
+
+                                    <!-- Informação adicional -->
+                                    <div class="callout callout-info">
+                                        <h5><i class="fas fa-info-circle"></i> Informação</h5>
+                                        <p class="mb-0">Stock recomendado: mínimo 50 unidades.</p>
+                                    </div>
+
+                                    <!-- Indicador visual -->
+                                    <div class="card card-outline card-info">
+                                        <div class="card-header">
+                                            <h3 class="card-title">
+                                                <i class="fas fa-chart-line mr-1"></i>Stock Atual
+                                            </h3>
+                                        </div>
+                                        <div class="card-body p-0 d-flex justify-content-center align-items-center" style="height: 100px;">
+                                            <h1 class="display-4" id="stockDisplay">@Model.Stock_Disponivel</h1>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save mr-2"></i>Guardar Alterações
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.Id_Material" class="btn btn-info">
+                                <i class="fas fa-eye mr-2"></i>Ver Detalhes
+                            </a>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-times mr-2"></i>Cancelar
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+
+            // Avaliação do stock (dinâmico)
+            function checkStockLevel() {
+                var stock = parseInt($('#stockInput').val()) || 0;
+
+                $('#stockDisplay').text(stock);
+
+                if (stock < 50) {
+                    $('#stockAlert').slideDown();
+                    $('#stockOk').slideUp();
+                    $('#stockDisplay').removeClass('text-success').addClass('text-danger');
+                } else {
+                    $('#stockAlert').slideUp();
+                    $('#stockOk').slideDown();
+                    $('#stockDisplay').removeClass('text-danger').addClass('text-success');
+                }
+            }
+
+            // Executar no carregamento
+            checkStockLevel();
+
+            // Atualizar ao modificar
+            $('#stockInput').on('input change', checkStockLevel);
+
+            // Feedback de submissão
+            $('form').on('submit', function () {
+                $(this).find('button[type="submit"]')
+                    .html('<i class="fas fa-spinner fa-spin mr-2"></i>A guardar...');
+            });
+
+        });
+    </script>
+}
+
+

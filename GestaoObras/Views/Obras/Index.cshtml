@@ -1,0 +1,206 @@
+@model IEnumerable<GestaoObras.Models.Obra>
+@{
+    ViewData["Title"] = "Lista de Obras";
+    var hasItems = Model != null && Model.Any();
+}
+
+@*
+    View: Lista de Obras
+    Objetivo: Listar todas as obras com ações rápidas (Detalhes/Editar/Apagar).
+    Notas:
+    - Usa AdminLTE (card, table, breadcrumbs).
+    - Mostra total de obras e quantas estão ativas.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-building mr-2"></i>Obras
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active">Obras</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-primary card-outline">
+
+                    <!-- Header do card -->
+                    <div class="card-header">
+                        <h3 class="card-title">Lista de Obras</h3>
+                        <div class="card-tools">
+                            <a asp-action="Create" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus mr-1"></i> Nova Obra
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Corpo -->
+                    <div class="card-body p-0">
+
+                        @if (!hasItems)
+                        {
+                            <!-- Estado vazio -->
+                            <div class="p-4">
+                                <div class="alert alert-info mb-0">
+                                    <h5>
+                                        <i class="icon fas fa-info-circle"></i> Informação
+                                    </h5>
+                                    Ainda não existem obras cadastradas.
+                                    <a asp-action="Create" class="alert-link">
+                                        Clique aqui para criar a primeira obra
+                                    </a>.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Tabela de obras -->
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th style="width: 250px;">Nome</th>
+                                            <th>Descrição</th>
+                                            <th style="width: 150px;">Cliente</th>
+                                            <th style="width: 200px;">Morada</th>
+                                            <th style="width: 80px;" class="text-center">Ativa</th>
+                                            <th style="width: 240px;" class="text-right">Ações</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var obra in Model)
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    <strong>@obra.Nome</strong>
+                                                </td>
+
+                                                <td>
+                                                    <small class="text-muted">
+                                                        @(obra.Descricao?.Length > 80
+                                                            ? obra.Descricao.Substring(0, 80) + "..."
+                                                            : obra.Descricao)
+                                                    </small>
+                                                </td>
+
+                                                <td>
+                                                    @obra.Cliente?.Nome
+                                                </td>
+
+                                                <td>
+                                                    <small>@obra.Morada</small>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    @if (obra.Ativa)
+                                                    {
+                                                        <span class="badge badge-success">
+                                                            <i class="fas fa-check"></i> Sim
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-secondary">
+                                                            <i class="fas fa-times"></i> Não
+                                                        </span>
+                                                    }
+                                                </td>
+
+                                                <td class="text-right">
+                                                    <div class="btn-group">
+
+                                                        <a asp-action="Details"
+                                                           asp-route-id="@obra.Id_Obra"
+                                                           class="btn btn-info btn-sm"
+                                                           data-toggle="tooltip"
+                                                           data-placement="top"
+                                                           title="Ver detalhes">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+
+                                                        <a asp-action="Edit"
+                                                           asp-route-id="@obra.Id_Obra"
+                                                           class="btn btn-warning btn-sm"
+                                                           data-toggle="tooltip"
+                                                           data-placement="top"
+                                                           title="Editar">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+
+                                                        <a asp-action="Delete"
+                                                           asp-route-id="@obra.Id_Obra"
+                                                           class="btn btn-danger btn-sm"
+                                                           data-toggle="tooltip"
+                                                           data-placement="top"
+                                                           title="Apagar">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        }
+
+                    </div>
+
+                    <!-- Footer com resumo -->
+                    @if (hasItems)
+                    {
+                        <div class="card-footer clearfix">
+                            <div class="float-left">
+                                <small class="text-muted">
+                                    Total: <strong>@Model.Count()</strong> obra(s) |
+                                    Ativas: <strong>@Model.Count(o => o.Ativa)</strong>
+                                </small>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Tooltips dos botões de ação
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}
+
+
+

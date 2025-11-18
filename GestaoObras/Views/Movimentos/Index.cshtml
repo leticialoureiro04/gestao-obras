@@ -1,0 +1,262 @@
+@model IEnumerable<GestaoObras.Models.Movimento>
+@{
+    ViewData["Title"] = "Movimentos de Stock";
+    var hasItems = Model != null && Model.Any();
+}
+
+@*
+    View: Movimentos de Stock
+    Objetivo: Mostrar o histórico de entradas (ADD) e saídas (REMOVE) de materiais,
+              com destaque visual para o tipo de operação e resumos no final.
+    Notas:
+    - Usa AdminLTE (cards, info-boxes) para resumo visual.
+    - Cada linha é animada na renderização para melhor UX.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-exchange-alt mr-2"></i>Movimentos de Stock
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active">Movimentos</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-primary card-outline">
+
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h3 class="card-title">Histórico de Movimentos</h3>
+                        <div class="card-tools">
+                            <a asp-action="Index"
+                               asp-controller="Obras"
+                               class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-arrow-left mr-1"></i> Voltar para Obras
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Corpo -->
+                    <div class="card-body p-0">
+
+                        @if (!hasItems)
+                        {
+                            <!-- Quando não há movimentos -->
+                            <div class="p-4">
+                                <div class="callout callout-info">
+                                    <h5>
+                                        <i class="fas fa-info-circle mr-2"></i> Sem Movimentos
+                                    </h5>
+                                    <p class="mb-0">
+                                        Não há movimentos de stock registados no sistema.
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Tabela de movimentos -->
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th style="width: 220px;">Obra</th>
+                                            <th style="width: 160px;">Cliente</th>
+                                            <th style="width: 220px;">Material</th>
+                                            <th style="width: 100px;" class="text-center">Operação</th>
+                                            <th style="width: 100px;" class="text-center">Quantidade</th>
+                                            <th style="width: 180px;">Data da Operação</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var movimento in Model)
+                                        {
+                                            var isAdd = string.Equals(
+                                                movimento.Operacao,
+                                                "ADD",
+                                                StringComparison.OrdinalIgnoreCase
+                                            );
+
+                                            <tr class="@(isAdd ? "table-success" : "table-danger")">
+
+                                                <!-- Obra -->
+                                                <td>
+                                                    <strong>@movimento.Obra?.Nome</strong>
+                                                </td>
+
+                                                <!-- Cliente -->
+                                                <td>
+                                                    <i class="fas fa-user-circle mr-1"></i>
+                                                    @movimento.Obra?.Cliente?.Nome
+                                                </td>
+
+                                                <!-- Material -->
+                                                <td>
+                                                    <i class="fas fa-box mr-1"></i>
+                                                    @movimento.Material?.Nome
+                                                </td>
+
+                                                <!-- Tipo de operação -->
+                                                <td class="text-center">
+                                                    @if (isAdd)
+                                                    {
+                                                        <span class="badge badge-success badge-pill px-3">
+                                                            <i class="fas fa-plus-circle mr-1"></i>ADD
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger badge-pill px-3">
+                                                            <i class="fas fa-minus-circle mr-1"></i>REMOVE
+                                                        </span>
+                                                    }
+                                                </td>
+
+                                                <!-- Quantidade (+/-) -->
+                                                <td class="text-center">
+                                                    <strong class="@(isAdd ? "text-success" : "text-danger")">
+                                                        @(isAdd ? "+" : "-")@movimento.Quantidade
+                                                    </strong>
+                                                </td>
+
+                                                <!-- Data -->
+                                                <td>
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    @movimento.Data_Operacao.ToString("dd/MM/yyyy HH:mm")
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+
+                    </div>
+
+                    <!-- Footer do card -->
+                    @if (hasItems)
+                    {
+                        <div class="card-footer">
+                            <div class="row align-items-center">
+
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-success mr-2 px-3 py-2">
+                                            <i class="fas fa-arrow-up mr-1"></i>Entrada (ADD)
+                                        </span>
+                                        <span class="badge badge-danger px-3 py-2">
+                                            <i class="fas fa-arrow-down mr-1"></i>Saída (REMOVE)
+                                        </span>
+                                        <span class="ml-3 text-muted">
+                                            Total de movimentos: <strong>@Model.Count()</strong>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 text-right">
+                                    <a asp-action="Index"
+                                       asp-controller="Obras"
+                                       class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left mr-1"></i> Voltar para Obras
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Cards de resumo -->
+        @if (hasItems)
+        {
+            var totalAdd = Model.Count(m =>
+                string.Equals(m.Operacao, "ADD", StringComparison.OrdinalIgnoreCase));
+
+            var totalRemove = Model.Count(m =>
+                !string.Equals(m.Operacao, "ADD", StringComparison.OrdinalIgnoreCase));
+
+            <div class="row mt-3">
+
+                <div class="col-md-4">
+                    <div class="info-box bg-success">
+                        <span class="info-box-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Entradas (ADD)</span>
+                            <span class="info-box-number">@totalAdd</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="info-box bg-danger">
+                        <span class="info-box-icon">
+                            <i class="fas fa-minus-circle"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Saídas (REMOVE)</span>
+                            <span class="info-box-number">@totalRemove</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="info-box bg-info">
+                        <span class="info-box-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total de Movimentos</span>
+                            <span class="info-box-number">@Model.Count()</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Animação simple nas linhas da tabela
+            $('.table tbody tr')
+                .hide()
+                .each(function (index) {
+                    $(this).delay(50 * index).fadeIn(300);
+                });
+        });
+    </script>
+}
+

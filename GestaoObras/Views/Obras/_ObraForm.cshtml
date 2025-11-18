@@ -1,0 +1,48 @@
+@model GestaoObras.Models.Obra
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"
+     style="display:@((ViewData.ModelState?.ErrorCount ?? 0) > 0 ? "block" : "none")"></div>
+
+<div class="form-group">
+    <label asp-for="Nome"></label>
+    <input asp-for="Nome" class="form-control" />
+    <span asp-validation-for="Nome" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Descricao"></label>
+    <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="Descricao" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Morada"></label>
+    <input asp-for="Morada" class="form-control" />
+    <span asp-validation-for="Morada" class="text-danger"></span>
+</div>
+
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label asp-for="Latitude"></label>
+        <input asp-for="Latitude" class="form-control" />
+        <span asp-validation-for="Latitude" class="text-danger"></span>
+    </div>
+    <div class="form-group col-md-6">
+        <label asp-for="Longitude"></label>
+        <input asp-for="Longitude" class="form-control" />
+        <span asp-validation-for="Longitude" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group">
+    <label asp-for="Id_Cliente">Cliente</label>
+    <select asp-for="Id_Cliente" class="form-control" asp-items="ViewBag.Clientes">
+        <option value="">-- Selecione um cliente --</option>
+    </select>
+    <span asp-validation-for="Id_Cliente" class="text-danger"></span>
+</div>
+
+<div class="form-check mb-2">
+    <input asp-for="Ativa" class="form-check-input" id="AtivaChk" />
+    <label asp-for="Ativa" class="form-check-label" for="AtivaChk"></label>
+</div>

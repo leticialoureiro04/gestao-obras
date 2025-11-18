@@ -1,0 +1,136 @@
+@model GestaoObras.Models.Obra
+@{
+    ViewData["Title"] = "Apagar Obra";
+}
+
+@*
+    View: Apagar Obra
+    Objetivo: Tela de confirmação antes de eliminar uma obra.
+    Notas:
+    - Realça visualmente o perigo (card-danger, texto a vermelho).
+    - Mostra os dados essenciais da obra antes da confirmação.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0 text-danger">
+                    <i class="fas fa-hammer mr-2"></i>Apagar Obra
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Obras</a>
+                    </li>
+                    <li class="breadcrumb-item active text-danger">Apagar</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-outline card-danger">
+
+                    <!-- Header do card -->
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-trash-alt mr-2"></i>Confirmação de eliminação
+                        </h3>
+                    </div>
+
+                    <!-- Corpo -->
+                    <div class="card-body">
+
+                        <!-- Aviso -->
+                        <div class="callout callout-danger">
+                            <h5>
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Tem a certeza que pretende apagar esta obra?
+                            </h5>
+                            <p class="mb-0">
+                                Esta ação é <strong>irreversível</strong> e poderá afetar registos
+                                de movimentação de stock associados.
+                            </p>
+                        </div>
+
+                        <h5 class="mb-3">
+                            <i class="fas fa-hammer mr-2"></i>Dados da Obra
+                        </h5>
+
+                        <!-- Dados da obra -->
+                        <div class="table-responsive">
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:160px;">
+                                            <i class="fas fa-tag mr-1"></i> Nome
+                                        </th>
+                                        <td>@Model.Nome</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            <i class="fas fa-user mr-1"></i> Cliente
+                                        </th>
+                                        <td>@Model.Cliente?.Nome</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            <i class="fas fa-map-marker-alt mr-1"></i> Morada
+                                        </th>
+                                        <td>@Model.Morada</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <form asp-action="Delete" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="Id_Obra" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-check mr-1"></i> Confirmar eliminação
+                                </button>
+                            </form>
+
+                            <a asp-action="Index" class="btn btn-secondary ml-2">
+                                <i class="fas fa-times mr-1"></i> Cancelar
+                            </a>
+                        </div>
+
+                        <span class="text-muted small">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Verifique os dados antes de eliminar a obra.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+

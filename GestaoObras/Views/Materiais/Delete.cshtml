@@ -1,0 +1,137 @@
+@model GestaoObras.Models.Material
+@{
+    ViewData["Title"] = "Apagar Material";
+}
+
+@*
+    View: Apagar Material
+    Finalidade: Tela de confirmação antes de eliminar definitivamente um material.
+    Notas:
+    - Mantém consistência visual com AdminLTE.
+    - Informação resumida e clara para evitar eliminações acidentais.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0 text-danger">
+                    <i class="fas fa-box-open mr-2"></i>Apagar Material
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Materiais</a>
+                    </li>
+                    <li class="breadcrumb-item active text-danger">Apagar</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo Principal -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-outline card-danger">
+
+                    <!-- Cabeçalho do card -->
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-trash-alt mr-2"></i>Confirmação de eliminação
+                        </h3>
+                    </div>
+
+                    <!-- Corpo -->
+                    <div class="card-body">
+
+                        <!-- Aviso -->
+                        <div class="callout callout-danger">
+                            <h5>
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Tem a certeza que pretende apagar este material?
+                            </h5>
+                            <p class="mb-0">
+                                Esta ação é <strong>irreversível</strong> e poderá afetar o histórico de movimentos.
+                            </p>
+                        </div>
+
+                        <h5 class="mb-3">
+                            <i class="fas fa-box mr-2"></i>Dados do Material
+                        </h5>
+
+                        <!-- Dados do Material -->
+                        <div class="table-responsive">
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:180px;">
+                                            <i class="fas fa-box mr-1"></i> Nome
+                                        </th>
+                                        <td>@Model.Nome</td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <i class="fas fa-align-left mr-1"></i> Descrição
+                                        </th>
+                                        <td>@Model.Descricao</td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <i class="fas fa-layer-group mr-1"></i> Stock Disponível
+                                        </th>
+                                        <td>@Model.Stock_Disponivel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <!-- Rodapé -->
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <!-- Formulário de eliminação -->
+                            <form asp-action="Delete" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="Id_Material" />
+
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-check mr-1"></i> Confirmar eliminação
+                                </button>
+                            </form>
+
+                            <!-- Cancelar -->
+                            <a asp-action="Index" class="btn btn-secondary ml-2">
+                                <i class="fas fa-times mr-1"></i> Cancelar
+                            </a>
+                        </div>
+
+                        <span class="text-muted small">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Verifique os dados antes de confirmar.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

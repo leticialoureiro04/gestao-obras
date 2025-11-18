@@ -1,0 +1,225 @@
+@model GestaoObras.Models.Obra
+@{
+    ViewData["Title"] = "Editar Obra";
+}
+
+@*
+    View: Editar Obra
+    Objetivo: Permitir alterar dados gerais da obra.
+    Notas:
+    - Usa AdminLTE (cards, form groups, breadcrumbs).
+    - Campos divididos em duas colunas para melhor organização.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-edit mr-2"></i>Editar Obra
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Obras</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@Model.Id_Obra">@Model.Nome</a></li>
+                    <li class="breadcrumb-item active">Editar</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-warning">
+
+                    <!-- Título -->
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-edit mr-2"></i>Editar Obra: <strong>@Model.Nome</strong>
+                        </h3>
+                        <div class="card-tools">
+                            <a asp-action="Details" asp-route-id="@Model.Id_Obra" class="btn btn-tool" title="Ver detalhes">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id_Obra" />
+
+                        <div class="card-body">
+
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="row">
+
+                                <!-- Coluna esquerda -->
+                                <div class="col-md-6">
+
+                                    <!-- Nome -->
+                                    <div class="form-group">
+                                        <label asp-for="Nome">
+                                            <i class="fas fa-building mr-1"></i>Nome da Obra
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            </div>
+                                            <input asp-for="Nome" class="form-control" placeholder="Ex: Construção de Moradia" />
+                                        </div>
+                                        <span asp-validation-for="Nome" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Descrição -->
+                                    <div class="form-group">
+                                        <label asp-for="Descricao">
+                                            <i class="fas fa-align-left mr-1"></i>Descrição
+                                        </label>
+                                        <textarea asp-for="Descricao" class="form-control" rows="4" placeholder="Descreva a obra..."></textarea>
+                                        <span asp-validation-for="Descricao" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Cliente -->
+                                    <div class="form-group">
+                                        <label asp-for="Id_Cliente">
+                                            <i class="fas fa-user mr-1"></i>Cliente
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            </div>
+                                            <select asp-for="Id_Cliente" class="form-control select2" asp-items="ViewBag.Clientes">
+                                                <option value="">Selecione um cliente...</option>
+                                            </select>
+                                        </div>
+                                        <span asp-validation-for="Id_Cliente" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Ativa -->
+                                    <div class="form-group">
+                                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                            <input type="checkbox" asp-for="Ativa" class="custom-control-input" id="ativaSwitch" />
+                                            <label class="custom-control-label" for="ativaSwitch">
+                                                <i class="fas fa-check-circle mr-1"></i>Obra Ativa
+                                            </label>
+                                        </div>
+                                        <small class="form-text text-muted">Define se a obra está em execução.</small>
+                                    </div>
+
+                                </div>
+
+                                <!-- Coluna direita -->
+                                <div class="col-md-6">
+
+                                    <!-- Morada -->
+                                    <div class="form-group">
+                                        <label asp-for="Morada">
+                                            <i class="fas fa-map-marker-alt mr-1"></i>Morada
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                            </div>
+                                            <input asp-for="Morada" class="form-control" placeholder="Ex: Rua X, nº 12" />
+                                        </div>
+                                        <span asp-validation-for="Morada" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Latitude -->
+                                    <div class="form-group">
+                                        <label asp-for="Latitude">
+                                            <i class="fas fa-map-pin mr-1"></i>Latitude
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                                            </div>
+                                            <input asp-for="Latitude" type="number" step="0.000001" class="form-control" placeholder="Ex: 40.203300" />
+                                        </div>
+                                        <span asp-validation-for="Latitude" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Longitude -->
+                                    <div class="form-group">
+                                        <label asp-for="Longitude">
+                                            <i class="fas fa-map-pin mr-1"></i>Longitude
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                                            </div>
+                                            <input asp-for="Longitude" type="number" step="0.000001" class="form-control" placeholder="Ex: -8.410300" />
+                                        </div>
+                                        <span asp-validation-for="Longitude" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Informação -->
+                                    <div class="callout callout-info">
+                                        <h5><i class="fas fa-info-circle"></i> Informação</h5>
+                                        <p class="mb-0">Latitude e longitude são opcionais e servem para localizar a obra no mapa.</p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save mr-2"></i>Guardar Alterações
+                            </button>
+
+                            <a asp-action="Details" asp-route-id="@Model.Id_Obra" class="btn btn-info">
+                                <i class="fas fa-eye mr-2"></i>Ver Detalhes
+                            </a>
+
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-times mr-2"></i>Cancelar
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+
+            // Select2 para dropdown de clientes
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                placeholder: 'Selecione um cliente...'
+            });
+
+            // Feedback ao submeter
+            $('form').on('submit', function () {
+                $(this).find('button[type="submit"]')
+                    .html('<i class="fas fa-spinner fa-spin mr-2"></i>A guardar...');
+            });
+        });
+    </script>
+}
+

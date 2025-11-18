@@ -1,0 +1,264 @@
+@model GestaoObras.Models.Cliente
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+@*
+    View: Editar Cliente
+    Finalidade: Permitir atualização dos dados de um cliente existente.
+    Notas: Mantém layout AdminLTE e validação client-side.
+*@
+
+<!-- Header da página -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-user-edit mr-2"></i>Editar Cliente
+                </h1>
+            </div>
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Home">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Clientes</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Details" asp-route-id="@Model.Id_Cliente">
+                            @Model.Nome
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">Editar</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-warning">
+
+                    <!-- Header do card -->
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user-edit mr-2"></i>
+                            Editar Cliente: <strong>@Model.Nome</strong>
+                        </h3>
+                        <div class="card-tools">
+                            <a asp-action="Details"
+                               asp-route-id="@Model.Id_Cliente"
+                               class="btn btn-tool"
+                               title="Ver detalhes">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id_Cliente" />
+
+                        <div class="card-body">
+                            <!-- Resumo de validação -->
+                            <div asp-validation-summary="ModelOnly"
+                                 class="alert alert-danger"
+                                 role="alert"></div>
+
+                            <div class="row">
+
+                                <!-- Coluna Esquerda -->
+                                <div class="col-md-6">
+
+                                    <!-- Nome -->
+                                    <div class="form-group">
+                                        <label asp-for="Nome">
+                                            <i class="fas fa-user mr-1"></i>Nome Completo
+                                        </label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-user"></i>
+                                                </span>
+                                            </div>
+                                            <input asp-for="Nome"
+                                                   class="form-control"
+                                                   placeholder="Ex: João Silva" />
+                                        </div>
+
+                                        <span asp-validation-for="Nome"
+                                              class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- NIF -->
+                                    <div class="form-group">
+                                        <label asp-for="NIF">
+                                            <i class="fas fa-id-card mr-1"></i>NIF
+                                        </label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-id-card"></i>
+                                                </span>
+                                            </div>
+                                            <input asp-for="NIF"
+                                                   class="form-control"
+                                                   placeholder="Ex: 123456789"
+                                                   maxlength="9" />
+                                        </div>
+
+                                        <span asp-validation-for="NIF"
+                                              class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Morada -->
+                                    <div class="form-group">
+                                        <label asp-for="Morada">
+                                            <i class="fas fa-map-marker-alt mr-1"></i>Morada
+                                        </label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input asp-for="Morada"
+                                                   class="form-control"
+                                                   placeholder="Ex: Rua das Flores, nº 12, Coimbra" />
+                                        </div>
+
+                                        <span asp-validation-for="Morada"
+                                              class="text-danger small"></span>
+                                    </div>
+
+                                </div>
+
+                                <!-- Coluna Direita -->
+                                <div class="col-md-6">
+
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <label asp-for="Email">
+                                            <i class="fas fa-envelope mr-1"></i>Email
+                                        </label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-envelope"></i>
+                                                </span>
+                                            </div>
+                                            <input asp-for="Email"
+                                                   type="email"
+                                                   class="form-control"
+                                                   placeholder="exemplo@email.com" />
+                                        </div>
+
+                                        <span asp-validation-for="Email"
+                                              class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Telefone -->
+                                    <div class="form-group">
+                                        <label asp-for="Telefone">
+                                            <i class="fas fa-phone mr-1"></i>Telefone
+                                        </label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-phone"></i>
+                                                </span>
+                                            </div>
+                                            <input asp-for="Telefone"
+                                                   class="form-control"
+                                                   placeholder="Ex: 912345678"
+                                                   maxlength="9" />
+                                        </div>
+
+                                        <span asp-validation-for="Telefone"
+                                              class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Caixa de informação -->
+                                    <div class="callout callout-info">
+                                        <h5>
+                                            <i class="fas fa-info-circle"></i> Informação
+                                        </h5>
+                                        <p class="mb-0">
+                                            Certifique-se de que todos os dados estão corretos
+                                            antes de guardar as alterações.
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rodapé -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save mr-2"></i>Guardar Alterações
+                            </button>
+
+                            <a asp-action="Details"
+                               asp-route-id="@Model.Id_Cliente"
+                               class="btn btn-info">
+                                <i class="fas fa-eye mr-2"></i>Ver Detalhes
+                            </a>
+
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-times mr-2"></i>Cancelar
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+
+            // Máscara para NIF (9 dígitos)
+            $('#NIF').on('input', function () {
+                this.value = this.value.replace(/\D/g, '').substring(0, 9);
+            });
+
+            // Máscara para Telefone (9 dígitos)
+            $('#Telefone').on('input', function () {
+                this.value = this.value.replace(/\D/g, '').substring(0, 9);
+            });
+
+            // Feedback visual ao submeter o formulário
+            $('form').on('submit', function () {
+                $(this)
+                    .find('button[type="submit"]')
+                    .html('<i class="fas fa-spinner fa-spin mr-1"></i> A guardar...');
+            });
+
+        });
+    </script>
+}
+
+
